@@ -1,73 +1,96 @@
-import React, { useCallback, useState } from "react";
-import Header from "./components/Header";
-import ThemeSelector from "./components/ThemeSelector";
-import Controls from "./components/Controls";
+import { useState } from "react";
+import HomeScreen from "./components/HomeScreen";
+import GameHeader from "./components/GameHeader";
 import GameBoard from "./components/GameBoard";
-import type { Mode } from "./types";
+import WinModal from "./components/WinModal";
+import SettingsModal from "./components/SettingsModal";
+import type { ThemeKey } from "./types";
 
-export default function App() {
-  const [theme, setTheme] = useState<"animals" | "flags" | "icons">("animals");
+function App() {
+  const [screen, setScreen] = useState<"home" | "game" | "win">("home");
+
+  const [theme, setTheme] = useState<ThemeKey>("animals");
   const [grid, setGrid] = useState(4);
-  const [mode, setMode] = useState<Mode>("casual");
-  const [running, setRunning] = useState(false);
+
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
-  const [streak, setStreak] = useState(0);
   const [movesLeft, setMovesLeft] = useState<number | null>(null);
+  const [streak, setStreak] = useState(0);
 
-  const handleStart = useCallback(() => {
-    setRunning(true);
+  const [showSettings, setShowSettings] = useState(false);
+
+  function startGame() {
+    setTimeLeft(null);
+    setMovesLeft(null);
     setStreak(0);
-  }, []);
+    setScreen("game");
+  }
 
-  const handleReset = useCallback(() => {
-    // simply toggle running off then on to force reset of board (handled by GameBoard effect on grid/theme/mode)
-    setRunning(false);
-    setTimeout(() => setRunning(true), 50);
-  }, []);
+  function resetGame() {
+    startGame();
+  }
 
-  const handleWin = (stats: { timeTaken: number; moves: number }) => {
-    setRunning(false);
-    alert(`You won! Time: ${stats.timeTaken}s, Moves: ${stats.moves}`);
-  };
+  function winGame() {
+    setScreen("win");
+  }
 
-  const handleLose = () => {
-    setRunning(false);
-    alert("You lost! Try again.");
-  };
+  function replay() {
+    startGame(); // same theme + grid size
+  }
+
+  function goHome() {
+    setScreen("home");
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 pb-10">
-      <Header />
-      <ThemeSelector
-        theme={theme}
-        setTheme={setTheme}
-        grid={grid}
-        setGrid={setGrid}
-      />
-      <Controls
-        mode={mode}
-        setMode={setMode}
-        onStart={handleStart}
-        onReset={handleReset}
-        timeLeft={timeLeft}
-        streak={streak}
-        movesLeft={movesLeft}
-        running={running}
-      />
-      <GameBoard
-        grid={grid}
-        theme={theme}
-        mode={mode}
-        running={running}
-        onWin={handleWin}
-        onLose={handleLose}
-        setTimeLeftCallback={(t) => setTimeLeft(t ?? null)}
-        setStreakCallback={(s) => setStreak(s)}
-        setMovesLeftCallback={(m) => setMovesLeft(m ?? null)}
-      />
-      <footer className="max-w-4xl mx-auto text-center mt-8 text-xs text-gray-400">
-        Recall Vault · Khushi
-      </footer>
-    </div>
+    <>
+      {screen === "home" && (
+        <>
+          <HomeScreen
+            theme={theme}
+            setTheme={setTheme}
+            grid={grid}
+            setGrid={setGrid}
+            onStart={startGame}
+            onOpenSettings={() => setShowSettings(true)}
+          />
+
+          {showSettings && (
+            <SettingsModal onClose={() => setShowSettings(false)} />
+          )}
+        </>
+      )}
+
+      {screen === "game" && (
+        <div className="h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-orange-100 via-orange-50 to-pink-50 p-4">
+          <GameHeader
+            timeLeft={timeLeft}
+            streak={streak}
+            movesLeft={movesLeft}
+            onReset={resetGame}
+          />
+
+          <div className="bg-white/80 backdrop-blur-xl border border-orange-200 shadow-2xl rounded-3xl w-[500px] h-[500px] p-8 flex items-center justify-center">
+            <GameBoard
+              grid={grid}
+              theme={theme}
+              mode="casual"
+              running={true}
+              onWin={winGame}
+              setTimeLeftCallback={setTimeLeft}
+              setMovesLeftCallback={setMovesLeft}
+              setStreakCallback={setStreak}
+            />
+          </div>
+        </div>
+      )}
+
+      {screen === "win" && (
+        <div className="h-screen w-full flex items-center justify-center bg-gradient-to-br from-orange-100 via-orange-50 to-pink-50">
+          <WinModal onReplay={replay} onHome={goHome} />
+        </div>
+      )}
+    </>
   );
 }
+
+export default App;

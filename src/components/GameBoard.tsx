@@ -187,32 +187,32 @@ export default function GameBoard({
 
   // layout grid style
   const gridStyle = useMemo(() => {
-    return { gridTemplateColumns: `repeat(${grid}, minmax(0,1fr))` };
+    const cardSize = grid === 4 ? '80px' : grid === 6 ? '60px' : '45px';
+    return { 
+      gridTemplateColumns: `repeat(${grid}, ${cardSize})`,
+      gridTemplateRows: `repeat(${grid}, ${cardSize})`,
+      gap: '8px'
+    };
   }, [grid]);
 
   return (
-    <div className="max-w-4xl mx-auto px-4">
-      <div className="bg-white p-6 rounded-soft shadow-soft-glow">
-        <div className="grid gap-3" style={{ minHeight: "360px" }}>
-          <div className="grid" style={gridStyle}>
-            {cards.map((c) => (
-              <div key={c.id} className="p-2">
-                <div className={`rounded-soft ${c.matched ? "matched" : ""}`}>
-                  <Card
-                    card={c}
-                    onClick={() => handleFlip(c)}
-                    disabled={disabled}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
+    <div className="w-full h-full flex flex-col">
+      <div className="flex-1 flex items-center justify-center">
+        <div className="grid" style={gridStyle}>
+          {cards.map((c) => (
+            <Card
+              key={c.id}
+              card={c}
+              onClick={() => handleFlip(c)}
+              disabled={disabled}
+            />
+          ))}
         </div>
+      </div>
 
-        <div className="mt-4 text-sm text-gray-600">
-          <div>
-            Moves: <span className="font-medium">{moves}</span>
-          </div>
+      <div className="mt-4 text-sm text-orange-700 text-center">
+        <div>
+          Moves: <span className="font-medium">{moves}</span>
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 export type Mode = "timed" | "streak" | "challenge" | "casual";
-export type ThemeKey = "animals" | "flags" | "icons";
+export type ThemeKey = "animals" | "fruits" | "numbers" | "emoji";
 
 export interface CardItem {
   id: string; // unique id per card instance
