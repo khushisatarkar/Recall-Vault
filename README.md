@@ -1,73 +1,51 @@
-# React + TypeScript + Vite
+# Recall Vault
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive memory card game with multiple themes, animations and varied difficulty levels using different grid sizes.
 
-Currently, two official plugins are available:
+## ✨ Features
+- Smooth 3D flip animation
+- Win detection + confetti animation
+- Glow effects, soft UI, shadows, micro-interactions
+- Multiple difficulty levels
+  - 4×4 (Easy)
+  - 6×6 (Medium)
+  - 8×8 (Hard)
+- Custom card themes
+  - Animals
+  - Fruits
+  - Emoji
+  - Numbers
+ 
+## ⚙️ Tech Stack
+- Frontend
+  - React + TypeScript
+  - Vite
+  - TailwindCSS
+  - Framer Motion
+  - Lucide-react Icons
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Logic & Game Engine
+  - Custom deck builder
+  - Grid-based difficulty logic
+  - Timer system
+  - Streak calculation
+  - Move counter logic
 
-## React Compiler
+## 🛠️ Future Enhancements
+- Multiple game modes: Timed Mode, Streak Mode, Challenge Mode
+- Profile and stats system (Best time per grid size, Total games played, Accuracy stats, Win rate)
+- Sound Effects
+- Dark/Light theme toggle
+- Multiplayer mode (socket-based)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Results
+1. Homepage
+<img width="1919" height="859" alt="Home Page" src="https://github.com/user-attachments/assets/0aa68fee-750f-46a7-83d2-e56ba61b97ab" />
+2. Game Page
+<img width="1917" height="852" alt="Game Page" src="https://github.com/user-attachments/assets/958079a6-7b6d-4acf-bcd1-692c9d069b64" />
 
-## Expanding the ESLint configuration
+## 🙋‍♀️ Developed by
+Khushi Satarkar
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Feel free to reach out or connect with me!
+ [LinkedIn](https://www.linkedin.com/in/khushi-satarkar-039056254/) | [Email](mailto:khushisatarkar24@gmail.com)
