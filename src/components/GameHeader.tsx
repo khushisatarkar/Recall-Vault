@@ -1,5 +1,5 @@
 type Props = {
-  timeLeft: number | null;
+  timeLeft: number;
   streak: number;
   movesLeft: number | null;
   onReset: () => void;
@@ -14,7 +14,7 @@ export default function GameHeader({
   return (
     <div className="w-full max-w-[500px] flex justify-between items-center px-4 py-3 mb-4">
       <div className="flex gap-6 text-lg font-semibold text-orange-800">
-        <div>⏳ {timeLeft ?? "-"}</div>
+        <div>⏳ {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</div>
         <div>🔥 {streak}</div>
         <div>🎯 {movesLeft ?? "-"}</div>
       </div>

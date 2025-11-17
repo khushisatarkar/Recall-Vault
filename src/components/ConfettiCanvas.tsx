@@ -35,18 +35,35 @@ export default function ConfettiCanvas({ refCallback }: Props) {
 
     function spawnBurst() {
       particlesRef.current = [];
-      for (let i = 0; i < 120; i++) {
+      
+      // Left corner confetti
+      for (let i = 0; i < 60; i++) {
         particlesRef.current.push({
-          x: Math.random() * w,
-          y: -20,
-          vx: (Math.random() - 0.5) * 8,
-          vy: Math.random() * 6 + 2,
+          x: Math.random() * 100, // Bottom left area
+          y: h - Math.random() * 50, // Bottom of screen
+          vx: Math.random() * 8 + 2, // Shoot right and up
+          vy: -(Math.random() * 12 + 8), // Shoot upward
           r: Math.random() * 4 + 2,
           color: `hsl(${Math.floor(Math.random() * 360)} 80% 55%)`,
           rotation: Math.random() * 360,
           vr: (Math.random() - 0.5) * 10,
         });
       }
+      
+      // Right corner confetti
+      for (let i = 0; i < 60; i++) {
+        particlesRef.current.push({
+          x: w - Math.random() * 100, // Bottom right area
+          y: h - Math.random() * 50, // Bottom of screen
+          vx: -(Math.random() * 8 + 2), // Shoot left and up
+          vy: -(Math.random() * 12 + 8), // Shoot upward
+          r: Math.random() * 4 + 2,
+          color: `hsl(${Math.floor(Math.random() * 360)} 80% 55%)`,
+          rotation: Math.random() * 360,
+          vr: (Math.random() - 0.5) * 10,
+        });
+      }
+      
       run();
     }
 
@@ -57,7 +74,7 @@ export default function ConfettiCanvas({ refCallback }: Props) {
         for (const p of particlesRef.current) {
           p.x += p.vx;
           p.y += p.vy;
-          p.vy += 0.12; // gravity
+          p.vy += 0.3; // gravity
           p.rotation += p.vr;
 
           ctx.save();

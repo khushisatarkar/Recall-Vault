@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { CardItem, Mode, ThemeKey } from "../types";
 import { buildDeck, getPairsCount } from "../utils/game";
 import Card from "./Card";
-import ConfettiCanvas from "./ConfettiCanvas";
 
 interface Props {
   grid: number;
@@ -33,11 +32,10 @@ export default function GameBoard({
   const [disabled, setDisabled] = useState(false);
   const [moves, setMoves] = useState(0);
   const [streak, setStreak] = useState(0);
-  const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
   const [movesLeft, setMovesLeft] = useState<number | null>(null);
   const [won, setWon] = useState(false);
   const startTimeRef = useRef<number | null>(null);
-  const confettiRef = useRef<HTMLCanvasElement | null>(null);
 
   // rebuild deck when grid/theme change or on reset
   useEffect(() => {
@@ -48,48 +46,28 @@ export default function GameBoard({
     setMoves(0);
     setStreak(0);
     setWon(false);
-    if (mode === "timed") {
-      // time scale: grid 4 -> 60s, 6 -> 120s, 8 -> 240s (example)
-      const base = grid === 4 ? 60 : grid === 6 ? 120 : 240;
-      setTimeLeft(base);
-      setMovesLeft(null);
-    } else if (mode === "challenge") {
+    setElapsedTime(0);
+    if (mode === "challenge") {
       // limited moves roughly pairs * 3
       const movesAllowed = getPairsCount(grid) * 3;
       setMovesLeft(movesAllowed);
-      setTimeLeft(null);
     } else {
-      setTimeLeft(null);
       setMovesLeft(null);
     }
   }, [grid, theme, mode]);
 
-  // run timer if timed mode & running
+  // run elapsed timer when running
   useEffect(() => {
-    if (mode !== "timed") {
-      if (setTimeLeftCallback) setTimeLeftCallback(null);
-      return;
-    }
-    if (!running || timeLeft == null) return;
+    if (!running) return;
     const t = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev == null) return null;
-        if (prev <= 1) {
-          clearInterval(t);
-          if (!won) onLose?.();
-          return 0;
-        }
-        return prev - 1;
-      });
+      setElapsedTime((prev) => prev + 1);
     }, 1000);
-    if (setTimeLeftCallback) setTimeLeftCallback(timeLeft);
     return () => clearInterval(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [running, mode, timeLeft]);
+  }, [running]);
 
   useEffect(() => {
-    if (setTimeLeftCallback) setTimeLeftCallback(timeLeft);
-  }, [timeLeft, setTimeLeftCallback]);
+    if (setTimeLeftCallback) setTimeLeftCallback(elapsedTime);
+  }, [elapsedTime, setTimeLeftCallback]);
 
   useEffect(() => {
     if (setStreakCallback) setStreakCallback(streak);
@@ -160,13 +138,6 @@ export default function GameBoard({
         ? Math.floor((Date.now() - startTimeRef.current) / 1000)
         : 0;
       onWin?.({ timeTaken, moves });
-      // fire confetti
-      setTimeout(() => {
-        if (confettiRef.current) {
-          // call confetti function on canvas element by dispatching custom event
-          confettiRef.current.dispatchEvent(new CustomEvent("celebrate"));
-        }
-      }, 300);
     }
   }, [cards, onWin, moves]);
 
@@ -215,9 +186,6 @@ export default function GameBoard({
           Moves: <span className="font-medium">{moves}</span>
         </div>
       </div>
-
-      {/* Confetti Canvas overlay */}
-      <ConfettiCanvas refCallback={(el) => (confettiRef.current = el)} />
     </div>
   );
 }
